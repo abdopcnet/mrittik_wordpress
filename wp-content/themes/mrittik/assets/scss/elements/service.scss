@@ -1,0 +1,234 @@
+/*--------------------------------------------------------------
+# Service
+--------------------------------------------------------------*/
+
+.pxl-service-grid-layout1 {
+    .item--count {
+        margin-bottom: 3px;
+        @extend .pxl-color-pri-sec;
+    }
+	.item--icon {
+        position: relative;
+        line-height: 1;
+        margin-bottom: 11px;
+        .logo-light {
+            @extend .pxl-display-bl-none;
+        }
+        .logo-dark {
+            @extend .pxl-display-no-bl;
+        }
+    }
+    .item--title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        @extend .pxl-h4-size;
+    }
+    .item--excerpt {
+        margin-bottom: 17px;
+        @extend .pxl-color-thi-fif;
+    }
+}
+
+.pxl-service-grid-layout2 {
+    .item--icon {
+        position: relative;
+        line-height: 1;
+        margin-bottom: 11px;
+        z-index: 1;
+        .logo-light {
+            @extend .pxl-display-bl-none;
+        }
+        .logo-dark {
+            @extend .pxl-display-no-bl;
+        }
+    }
+    .item--content {
+        position: relative;
+        z-index: 1;
+    }
+    .item--overlay {
+        opacity: 0;
+        background: rgba(0, 0, 0, 0.00001);
+        @include transition(all 400ms ease);
+        @extend .pxl-spill;
+    }
+    .item--title {
+        font-weight: 600;
+        margin-bottom: 6px;
+        @extend .pxl-h4-size;
+        a {
+            color: inherit;
+            &:hover {
+                color: $secondary_color;
+            }
+        }
+    }
+    .item--excerpt {
+        margin-bottom: 4px;
+        @extend .pxl-color-thi-fif;
+    }
+    .item--featured {
+        @extend .pxl-spill;
+        @extend .pxl-hidden;
+        @include transition(all 400ms ease);
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            @extend .pxl-hidden;
+            @include transition(all 400ms ease);
+        }
+    }
+    &.style1 {
+        .pxl-item--inner {
+            position: relative;
+            padding: 50px 40px;
+            @include transition(all 400ms ease-in-out);
+            @media #{$max-xs} {
+                padding: 50px 25px;
+            }
+            &:hover {
+                padding-top: 105px;
+                @media #{$max-xs} {
+                    padding-top: 80px;
+                }
+                .item--featured, .item--featured img {
+                    @extend .pxl-visible;
+                }
+                .item--overlay {
+                    opacity: 1;
+                    background-color: rgba(0, 0, 0, 0.7);
+                }
+                .item--title {
+                    color: $fourth_color;
+                }
+                .item--excerpt {
+                    color: $fourth_color;
+                }
+                .pxl-btn-crossline {
+                    .crossline1 {
+                        background-color: #FFFFFF;
+                        &:before, &:after {
+                            background-color: #FFFFFF;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.style3 {
+        .pxl-item--inner {
+            position: relative;
+            padding: 105px 40px 50px;
+            @include border-radius(10px);
+            @include transition(all 400ms ease-in-out);
+            @media #{$max-xs} {
+                padding: 50px 25px;
+            }
+            .item--overlay {
+                opacity: 0;
+                background-color: rgba(255, 255, 255, 0.80);
+                @include border-radius(10px);
+                @include box-shadow(0px 20px 60px rgba(23, 23, 23, 0.15));
+                @include transform(scale(0.8));
+            }
+            &:hover {
+                .item--overlay {
+                    opacity: 1;
+                    @include transform(scale(1));
+                }
+            }
+        }
+    }
+}
+
+// Carousel
+.pxl-service-carousel1 {
+    cursor: grab;
+	.pxl-item--inner {
+		display: flex;
+		flex-direction: column;
+		padding: 28px;
+	}
+	.pxl-item--title {
+        margin-bottom: 20px;
+    }
+    .pxl-item--excerpt {
+    	margin-bottom: 20px;
+    }
+    .pxl-item--image {
+        margin-bottom: 30px;
+    }
+}
+.pxl-service-carousel2 {
+    .pxl-item--title {
+        margin-bottom: 13px;
+        cursor: pointer;
+        @extend .pxl-h4-size;
+        a {
+            font-weight: 500;
+        }
+    }
+    .pxl-item--image {
+        margin-bottom: 15px;
+    }
+    .pxl-item--excerpt {
+        margin-bottom: 34px
+    }
+}
+.pxl-service-carousel3 {
+    .pxl-swiper-slide {
+        @include transition(all 300ms ease);
+    }
+    .pxl-item--title {
+        color: $fourth_color;
+        margin-bottom: 13px;
+        @extend .pxl-h4-size;
+    }
+    .pxl-item--image {
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        &[data-cursor-text] {
+            a {
+                cursor: none;
+            }
+        }
+        &:before {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,.2);
+            opacity: 0;
+            pointer-events: none;
+            @extend .pxl-middle;
+            @include border-radius(100%);
+        }
+        &:hover {
+            &:before {
+                @include animation(img_circle .75s);
+            }
+        }
+    }
+}
+.pxl-service-carousel4 {
+    .pxl-item--image {
+        margin-bottom: 20px;
+        @extend .pxl-overlay-plus;
+    }
+    .pxl-item--title {
+        margin-bottom: 20px;
+        cursor: pointer;
+        @extend .pxl-h4-size;
+        a {
+            font-weight: 500;
+        }
+    }
+    .pxl-item--excerpt {
+        margin-bottom: 15px
+    }
+    .pxl-item--list {
+        margin-bottom: 20px;
+    }
+}

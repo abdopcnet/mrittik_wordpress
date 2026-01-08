@@ -1,0 +1,336 @@
+button:not(.mfp-close, .rm-style-default, .wpcf7-submit, .search-submit, .wp-element-button, .mfp-arrow, .woosc-btn, .woosw-btn, .woosq-btn), .button {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFF;
+    padding: 0 50px;
+    margin: 0 10px 10px 0;
+    line-height: 64px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+    height: auto;
+    background-color: $secondary_color;
+    @media #{$max-xs} {
+        padding: 0 25px;
+    }
+    &:hover, &:focus, &:active, &:not([disabled]):not(.disabled).active, &:not([disabled]):not(.disabled):active {
+        outline: medium none;
+        text-decoration: none;
+        background-color: rgba(166, 161, 130, 0.6);
+    }
+}
+.btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 36px;
+    line-height: 48px;
+    cursor: pointer;
+    border: none;
+    height: auto;
+    @extend .pxl-color-fou-pri;
+    &:hover, &:focus, &:active {
+        outline: medium none;
+        text-decoration: none;
+        color: $fourth_color;
+    }
+}
+.btn-default {
+    margin: 0 9px 9px 0;
+    svg {
+        display: block;
+        top: 9px;
+        left: 9px;
+        border: 1px solid $primary_color;
+        @extend .pxl-spill-width;
+        @include transition(inherit);
+        path {
+            fill: $primary_color;
+        }
+    }
+    &:after {
+        @extend .pxl-spill;
+        @extend .pxl-bg-pri-fou;
+        @include transition(inherit);
+    }
+    span {
+        position: relative;
+        -webkit-box-flex: 0;
+        -ms-flex: none;
+        flex: none;
+        z-index: 1;
+    }
+    &:hover, &:focus, &:active {
+        svg {
+            opacity: 0.5;
+            @include transform(translate(-9px, -9px));
+        }
+        &:after {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+    }
+}
+.pxl-btn-line {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    @extend .pxl-color-pri-fou;
+    span {
+        @include transition(inherit);
+    }
+    .btn-text {
+        margin-right: 35px;
+        @extend .pxl-color-pri-fou;
+    }
+    .btn-icon {
+        position: relative;
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        .line {
+            display: inline-block;
+            position: absolute;
+            right: 50%;
+            top: 49.4%;
+            width: 35px;
+            height: 1px;
+            transform-origin: right;
+            @extend .pxl-bg-pri-fou;
+        }
+        .circle {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            border: 1px solid $primary_color;
+            @include border-radius(50%);
+        }
+        .dot {
+            display: inline-block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 5px;
+            height: 5px;
+            @extend .pxl-bg-pri-fou;
+            @include border-radius(50%);
+            @include transform(translate(-50%, -50%));
+        }
+    }
+    &:hover {
+        .btn-text {
+            color: $secondary_color;
+        }
+        .btn-icon {
+            .line {
+                background-color: $secondary_color;
+                @include animation(pxl_scale_lr 2s infinite linear .3s);
+            }
+            .circle {
+                border-style: dashed;
+                border-color: $secondary_color;
+                @include animation(pxl_spin 4s infinite linear .3s);
+            }
+            .dot {
+                background-color: $secondary_color;
+                @include animation(pxl_scale_lr2 2s infinite linear .3s);
+            }
+        }
+    }
+}
+.pxl-btn-crossline {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 15px;
+    overflow: hidden;
+    &.pxl-hover-transition {
+        @extend .pxl-custom-transition;
+    }
+    .crossline1, .crossline2 {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        height: 1px;
+        display: inline-block;
+        @include transition(inherit);
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            width: 7px;
+            height: 1px;
+            -webkit-transform-origin: right;-ms-transform-origin: right;transform-origin: right;
+        }
+        &:before {
+            @include transform(rotate(40deg));
+        }
+        &:after {
+            @include transform(rotate(-40deg));
+        }
+    }
+    .crossline1 {
+        width: 15px;
+        @extend .pxl-bg-pri-e6;
+        &:before, &:after {
+            @extend .pxl-bg-pri-e6;
+            @include transition(inherit);
+        }
+        &:before {
+            top: 0;
+        }
+        &:after {
+            bottom: 0;
+        }
+    }
+    .crossline2 {
+        width: 0px;
+        background-color: $secondary_color;
+        opacity: 0;
+        &:before, &:after {
+            background-color: $secondary_color;
+            @include transition(all 0.7s ease-in-out);
+        }
+        &:before {
+            top: -10px;
+        }
+        &:after {
+            bottom: -10px;
+        }
+    }
+    &:hover {
+        .crossline1 {
+            opacity: 0;
+            @include transform(scale(0));
+        }
+        .crossline2 {
+            width: 15px;
+            opacity: 1;
+            &:before {
+                top: 0px;
+            }
+            &:after {
+                bottom: 0px;
+            }
+        }
+    }
+}
+.pxl-btn-shine {
+    position: relative;
+    display: -webkit-inline-box;display: -ms-inline-flexbox;display: inline-flex;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 2;
+    font-weight: 700;
+    padding: 11px 45px;
+    color: $fourth_color;
+    background-color: $secondary_color;
+    text-align: center;
+    border: 1px solid transparent;
+    &:before {
+        content: '';
+        position: absolute;
+        left: -150%;
+        bottom: -150%;
+        background-color: rgba(255, 255, 255, 0.6);
+        width: 150%;
+        height: 150%;
+        @include transform(rotate(45deg));
+        @include transition(all 0.5s ease-in-out);
+    }
+    &:hover {
+        color: $fourth_color;
+        background-color: $third_color;
+        @include transition(none);
+        &:before {
+            left: 150%;
+            bottom: 150%;
+        }
+    }
+    &.shine-light {
+        color: $primary_color;
+        background-color: $fourth_color;
+        &:hover {
+            color: $primary_color;
+            background-color: $fifth_color;
+        }
+    }
+}
+.btn-border-running {
+    position: relative;
+    display: -webkit-inline-box;display: -ms-inline-flexbox;display: inline-flex;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 2;
+    font-weight: 700;
+    padding: 11px 37px;
+    text-align: center;
+    color: $fourth_color;
+    background-color: transparent;
+    border: 1px solid $fourth_color;
+    &:hover, &:focus, &:active {
+        color: $fourth_color;
+        @include transition(none);
+    }
+    &.start {
+        svg {
+            @include animation(pxl_btn_stroke 1s linear);
+        }
+    }
+    .lines {
+        position: absolute;
+        inset: 0;
+        mix-blend-mode: hard-light;
+        pointer-events: none;
+        z-index: 1;
+        > div {
+            position: absolute;
+            inset: 0;
+            &:last-child {
+                @include transform(rotate(180deg));
+            }
+            svg {
+                display: block;
+                position: absolute;
+                inset: 0;
+                overflow: visible;
+                fill: none;
+                stroke-width: 2;
+                stroke: #c9e9ff;
+                width: 100%;
+                height: 100%;
+                stroke-dasharray: 2 10;
+                stroke-dashoffset: 14;
+                opacity: 0;
+            }
+            svg {
+                &:nth-child(1) {
+                    stroke: #f8fcff;
+                }
+                &:nth-child(2) {
+                    stroke-width: 6px;
+                    -webkit-filter: blur(20px);filter: blur(20px);
+                }
+                &:nth-child(3) {
+                    stroke-width: 5px;
+                    -webkit-filter: blur(6px);filter: blur(6px);
+                }
+                &:nth-child(4) {
+                    stroke-width: 10px;
+                    -webkit-filter: blur(56px);filter: blur(56px);
+                }
+            }
+        }
+    }
+}

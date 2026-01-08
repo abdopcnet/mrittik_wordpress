@@ -1,0 +1,117 @@
+/*--------------------------------------------------------------
+# Video Player
+--------------------------------------------------------------*/
+
+.pxl-video-player1 {
+    .pxl-video--holder {
+        + .btn-video-wrap {
+            position: absolute;
+            z-index: 5;
+            &.p-center {
+                top: 50%;
+                left: 50%;
+                @include transform(translate(-50%, -50%));
+            }
+        }
+    }
+    .btn-video-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+    .pxl-video--inner {
+        position: relative;
+        overflow: hidden;
+        .pxl-video--holder {
+            @include animation(pxl_scale_in_out 30s linear infinite);
+            &:before {
+                position: absolute;
+                content: '';
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                background: $third_color;
+                @include border-radius(inherit);
+            }
+            .pxl-video--image, img {
+                @include border-radius(inherit);
+            }
+            img {
+                object-fit: cover;
+            }
+        }
+    }
+    .pxl-item--title {
+        color: $fourth_color;
+        margin: 0 15px 37px;
+        @extend .pxl-h2-size;
+    }
+    .btn-video {
+        &.style1, &.style2 {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            z-index: 2;
+            @include border-radius(50%);
+        }
+        &.style1 {
+            font-size: 80px;
+            width: 210px;
+            height: 210px;
+            line-height: 210px;
+            background: rgba(255, 255, 255, 0.24);
+            -webkit-backdrop-filter: blur(15px);backdrop-filter: blur(15px);
+            @include border-radius(100%);
+            @media #{$max-md} {
+                width: 180px;
+                height: 180px;
+                line-height: 180px;
+            }
+            @media #{$max-xs} {
+                width: 130px;
+                height: 130px;
+                line-height: 130px;
+            }
+            &:hover {
+                @include transform(scale(.9,.9));
+            }
+        }
+        &.style2 {
+            font-size: 17px;
+            width: 65px;
+            height: 40px;
+            line-height: 40px;
+            background-color: rgba(#172322, 0.8);
+            @include border-radius(5px);
+            &:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(#FFF, 0.63);
+                z-index: -2;
+                @include border-radius(5px);
+                @include animation(pxl_scale1 1500ms ease-out infinite);
+            }
+            &:hover {
+                &:before {
+                    -webkit-animation-play-state: paused;
+                    -moz-animation-play-state: paused;
+                    -o-animation-play-state: paused;
+                    animation-play-state: paused;
+                }
+                background-color: $primary_color;
+            }
+        }
+    }
+}

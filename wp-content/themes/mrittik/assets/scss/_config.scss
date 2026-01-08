@@ -1,0 +1,586 @@
+// Grid
+//--------------------------------------------------
+.pxl-grid {
+    .pxl-grid-masonry {
+        position: relative;
+    }
+    .grid-sizer {
+        z-index: -1;
+    }
+    .pxl-load-more {
+        margin-top: 55px;
+        text-align: center;
+        .btn {
+            padding: 0 30px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 48px;
+            text-transform: uppercase;
+            color: $fourth_color;
+            background: $secondary_color;
+            z-index: 1;
+            @extend .pxl-hover-transition;
+            .pxl-load-icon {
+                position: relative;
+                width: 0;
+                height: 10px;
+                opacity: 0;
+                z-index: 1;
+                @include transition(inherit);
+                &:before {
+                    content: '';
+                    width: 10px;
+                    height: 10px;
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: transparent $primary_color transparent $primary_color;
+                    margin: auto;
+                    @extend .pxl-spill-middle;
+                    @include border-radius(100%);
+                    @include animation(pxl_spin .6s infinite linear);
+                }
+            }
+        }
+        &.pxl-loadmore-style1 {
+            .btn {
+                position: relative;
+                width: 100%;
+            }
+        }
+        &.loading {
+            .btn {
+                color: $primary_color;
+                .pxl-load-icon {
+                    opacity: 1;
+                    width: 10px;
+                    margin: 0 10px;
+                }
+            }
+        }
+    }
+    @media #{$min-xl} {
+        .col-xl-pxl5 {
+            -ms-flex: 0 0 20%;
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+}
+
+.pxl-grid-filter1 {
+    position: relative;
+    text-align: center;
+    margin-bottom: 60px;
+    @media #{$max-sm} {
+        margin-bottom: 40px;
+    }
+    .pxl-filter--inner {
+        display: -webkit-inline-box;display: -ms-inline-flexbox;display: inline-flex;
+        -ms-flex-wrap: wrap;flex-wrap: wrap;
+        -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center;
+    }
+    .filter-item {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.8333;
+        padding: 20px 18px 15px;
+        margin: 0;
+        border-bottom: 1px solid #E6E6E6;
+        cursor: pointer;
+        @extend .pxl-color-pri-fou;
+        &.active, &:hover {
+            color: $secondary_color;
+        }
+    }
+    .filter-marker {
+        position: absolute;
+        display: none;
+        border-bottom: 3px solid $secondary_color;
+        height: 3px;
+        pointer-events: none;
+        @include transform(translateY(-2px));
+    }
+}
+.pxl-grid-filter2 {
+    margin-bottom: 38px;
+    font-size: 17px;
+    color: #444;
+    .filter-item {
+        cursor: pointer;
+        &:after {
+            content: '-';
+            margin: 0 18px;
+        }
+        &:last-child:after {
+            display: none;
+        }
+    }
+}
+.pxl-grid-filter3 {
+    @extend .swiper-filter-wrap;
+    margin-bottom: 53px;
+}
+
+.pxl-grid-no-results {
+    display: none;
+    font-size: 18px;
+    margin: 25px 0 0;
+}
+
+.filter-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: $secondary_color;
+    z-index: -1;
+}
+
+.elementor-editor-active .grid-sizer {
+    display: none;
+}
+
+// Start Swiper Carousel
+//--------------------------------------------------
+.pxl-swiper-container {
+    margin: 0 -15px;
+    position: relative;
+    overflow: hidden;
+}
+.pxl-swiper-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+    transition-property: transform,-webkit-transform;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+.swiper-container-vertical .pxl-swiper-wrapper {
+    -webkit-box-orient: vertical;-webkit-box-direction: normal;-ms-flex-direction: column;flex-direction: column;
+}
+.pxl-swiper-slide {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 0 15px;
+}
+.wp-arrow {
+    &.style1 {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 44px;
+        height: 88px;
+        overflow: hidden;
+        .pxl-swiper-arrow {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            line-height: 44px;
+            font-size: 20px;
+            background: $fourth_color;
+            text-align: center;
+            cursor: pointer;
+            overflow: hidden;
+            z-index: 2;
+            @extend .pxl-item--flexct;
+            @extend .pxl-hover-transition;
+            &.swiper-button-disabled {
+                background-color: rgba(255, 255, 255, 0.65);
+                cursor: not-allowed;
+            }
+            .crossline1, .crossline2 {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                height: 1px;
+                display: inline-block;
+                @extend .pxl-custom-transition;
+                @include transform(translateX(-50%));
+                &:before, &:after {
+                    content: '';
+                    position: absolute;
+                    width: 7px;
+                    height: 1px;
+                    @extend .pxl-custom-transition;
+                }
+                &:before {
+                    @include transform(rotate(40deg));
+                }
+                &:after {
+                    @include transform(rotate(-40deg));
+                }
+            }
+            .crossline1 {
+                width: 15px;
+                background-color: #2e2e2e;
+                &:before, &:after {
+                    background-color: #2e2e2e;
+                }
+                &:before {
+                    top: 0;
+                }
+                &:after {
+                    bottom: 0;
+                }
+            }
+            .crossline2 {
+                width: 0px;
+                background-color: $secondary_color;
+                opacity: 0;
+                &:before, &:after {
+                    background-color: $secondary_color;
+                    @include transition(all 0.7s ease-in-out);
+                }
+                &:before {
+                    top: -10px;
+                }
+                &:after {
+                    bottom: -10px;
+                }
+            }
+            &.pxl-swiper-arrow-prev {
+                top: 100%;
+                right: 0;
+                .crossline1, .crossline2 {
+                    &:before, &:after {
+                        left: 0;
+                        -webkit-transform-origin: left;-ms-transform-origin: left;transform-origin: left;
+                    }
+                }
+                .crossline2 {
+                    &:before {
+                        @include transform(rotate(315deg));
+                    }
+                    &:after {
+                        @include transform(rotate(-315deg));
+                    }
+                }
+            }
+            &.pxl-swiper-arrow-next {
+                top: 100%;
+                right: 0;
+                .crossline1, .crossline2 {
+                    &:before, &:after {
+                        right: 0;
+                        -webkit-transform-origin: right;-ms-transform-origin: right;transform-origin: right;
+                    }
+                }
+            }
+            &:not(.swiper-button-disabled):hover {
+                .crossline1 {
+                    opacity: 0;
+                    @include transform(scale(0));
+                }
+                .crossline2 {
+                    width: 15px;
+                    opacity: 1;
+                    &:before {
+                        top: 0px;
+                    }
+                    &:after {
+                        bottom: 0px;
+                    }
+                }
+            }
+        }
+    }
+    &.style2 {
+        .pxl-swiper-arrow {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            position: absolute;
+            cursor: pointer;
+            z-index: 1;
+            @media #{$min-md} {
+                top: 45%;
+                bottom: auto;
+                @include transform(translateY(-50%));
+            }
+            @media #{$max-sm} {
+                bottom: 100px;
+            }
+            .line {
+                position: absolute;
+                top: 49.4%;
+                width: 57px;
+                height: 1px;
+                display: inline-block;
+                background-color: $fifth_color;
+                @include transition(all 0.5s ease-in-out);
+            }
+            .circle {
+                position: relative;
+                width: 60px;
+                height: 60px;
+                border-radius: 100%;
+                display: inline-block;
+                border: 1px solid $fifth_color;
+            }
+            .dot {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 0px;
+                height: 0px;
+                border-radius: 0;
+                display: inline-block;
+                background-color: transparent;
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                animation: none;
+            }
+            &:hover {
+                .line {
+                    background-color: $secondary_color;
+                    @include transform(scaleX(0));
+                }
+                .circle {
+                    @include animation(full_circle 5s infinite linear);
+                    border-style: dashed;
+                    border-color: $secondary_color;
+                }
+                &.pxl-swiper-arrow-prev {
+                    .dot {
+                        border-right: 14px solid $secondary_color;
+                    }
+                }
+                &.pxl-swiper-arrow-next {
+                    .dot {
+                        border-left: 14px solid $secondary_color;
+                    }
+                }
+            }
+            &.pxl-swiper-arrow-prev {
+                left: 60px;
+                @media #{$max-lg} {
+                    left: 15px;
+                }
+                .line {
+                    left: calc(50% + 5px);
+                    transform-origin: left;
+                }
+                .dot {
+                    border-left: 0px solid transparent;
+                    border-right: 14px solid $fifth_color;
+                }
+            }
+            &.pxl-swiper-arrow-next {
+                right: 60px;
+                @media #{$max-lg} {
+                    right: 15px;
+                }
+                @media #{$max-sm} {
+                    left: 160px;
+                    right: auto;
+                }
+                .line {
+                    right: calc(50% + 5px);
+                    transform-origin: right;
+                }
+                .dot {
+                    border-left: 14px solid $fifth_color;
+                    border-right: 0px solid transparent;
+                }
+            }
+            &.swiper-button-disabled {
+                opacity: .35;
+                cursor: not-allowed;
+            }
+        }
+    }
+    &.style3 {
+        .pxl-swiper-arrow {
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1;
+            @extend .pxl-color-pri-b2;
+        }
+        @media #{$min-sm} {
+            .pxl-swiper-arrow {
+                position: absolute;
+                top: 40%;
+                bottom: auto;
+            }
+            .pxl-swiper-arrow-prev {
+                left: 0;
+            }
+            .pxl-swiper-arrow-next {
+                right: 0;
+            }
+        }
+        @media #{$max-xs} {
+            display: flex;
+            margin: 0 -15px;
+            .pxl-swiper-arrow {
+                margin: 0 15px;
+            }
+        }
+    }
+    &.style4 {
+        .pxl-swiper-arrow {
+            width: 44px;
+            height: 44px;
+            line-height: 44px;
+            font-size: 24px;
+            color: $primary_color;
+            background: $fourth_color;
+            text-align: center;
+            cursor: pointer;
+            z-index: 1;
+            @extend .pxl-custom-transition;
+            &.swiper-button-disabled {
+                background-color: rgba(255, 255, 255, 0.65);
+            }
+        }
+        .pxl-swiper-arrow {
+            position: absolute;
+            top: 50%;
+            bottom: auto;
+            @include transform(translateY(-50%));
+        }
+        .pxl-swiper-arrow-prev {
+            left: 0;
+        }
+        .pxl-swiper-arrow-next {
+            right: 0;
+        }
+    }
+}
+
+.pxl-swiper-dots {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    left: 50%;
+    margin-top: 30px;
+    width: 100% !important;
+    z-index: 1;
+    @include transform(translateX(-50%));
+    &.pxl-swiper-pagination-bullets {
+        margin: -11.5px 0;
+    }
+    .pxl-swiper-pagination-bullet {
+        position: relative;
+        margin: 11.5px;
+        padding: 7px;
+        text-align: center;
+        cursor: pointer;
+        @extend .pxl-hover-transition;
+        &:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            background: $third_color;
+            @include border-radius(50%);
+            @include transform(translate(-50%, -50%));
+            @include transition(inherit);
+        }
+        &.swiper-pagination-bullet-active-prev, &.swiper-pagination-bullet-active-next {
+            &:before {
+                width: 6px;
+                height: 6px;
+            }
+        }
+        &.swiper-pagination-bullet-active {
+            background-color: transparent;
+            &:before {
+                width: 8px;
+                height: 8px;
+                background-color: $secondary_color;
+            }
+        }
+    }
+    &.pxl-swiper-pagination-progressbar {
+        position: relative;
+        width: 100%;
+        height: 2px;
+        background-color: $secondary_color;
+        max-width: 1200px;
+        .swiper-pagination-progressbar-fill {
+            background: $secondary_color;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            transform-origin: left top;
+            @include transform(scale(0));
+        }
+    }
+}
+
+.pxl-swiper-boxshadow {
+    .pxl-carousel-inner {
+        margin: 0 -30px;
+        .pxl-swiper-container {
+            padding: 0 30px;
+        }
+    }
+    .pxl-swiper-slide {
+        @include transition(opacity .2s cubic-bezier(.645,.045,.355,1));
+    }
+    .pxl-swiper-slide:not(.swiper-slide-visible) {
+        opacity: 0;
+    }
+}
+
+.pxl-swiper-sliders {
+    position: relative;
+    &.pxl-swiper-arrow-show .pxl-swiper-arrow {
+        opacity: 1;
+        visibility: visible;
+    }
+    &:hover {
+        .wp-arrow {
+            &.style1 {
+                .pxl-swiper-arrow {
+                    &.pxl-swiper-arrow-prev {
+                        top: 0;
+                    }
+                    &.pxl-swiper-arrow-next {
+                        top: 45px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.pxl-swiper-nogap {
+    .pxl-swiper-container {
+        margin: 0;
+        .pxl-swiper-slide {
+            padding: 0;
+        }
+    }
+}
+
+.pxl-swiper-thumbs {
+    overflow: hidden;
+    .swiper-slide {
+        cursor: pointer;
+    }
+}
+// End Swiper Carousel
+//--------------------------------------------------
