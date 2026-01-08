@@ -39,11 +39,18 @@ function fix_demo_urls_in_links($url) {
         return $url;
     }
     
+    $local_url = get_fix_demo_local_url();
+    
+    // Replace demo URLs
     if (strpos($url, 'demo.bravisthemes.com') !== false) {
-        $local_url = get_fix_demo_local_url();
-        // Replace demo URL with local URL
         $url = str_replace('https://demo.bravisthemes.com/mrittik', $local_url, $url);
         $url = str_replace('http://demo.bravisthemes.com/mrittik', $local_url, $url);
+    }
+    
+    // Replace local IP URLs
+    if (strpos($url, '192.168.100.130') !== false) {
+        $url = str_replace('https://192.168.100.130', $local_url, $url);
+        $url = str_replace('http://192.168.100.130', $local_url, $url);
     }
     
     return $url;
@@ -61,18 +68,21 @@ function fix_demo_urls_in_post_meta($value, $object_id, $meta_key, $single) {
     // Only process if value contains demo URL
     if (is_array($value) || is_string($value)) {
         $value_serialized = is_array($value) ? serialize($value) : $value;
-        if (strpos($value_serialized, 'demo.bravisthemes.com') !== false) {
-            $local_url = get_fix_demo_local_url();
-            
+        $local_url = get_fix_demo_local_url();
+        
+        if (strpos($value_serialized, 'demo.bravisthemes.com') !== false || strpos($value_serialized, '192.168.100.130') !== false) {
             if (is_array($value)) {
                 $value = array_map_recursive(function($item) use ($local_url) {
                     if (is_string($item)) {
-                        return str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $item);
+                        $item = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $item);
+                        $item = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $item);
+                        return $item;
                     }
                     return $item;
                 }, $value);
             } elseif (is_string($value)) {
                 $value = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $value);
+                $value = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $value);
             }
         }
     }
@@ -88,15 +98,18 @@ function fix_demo_urls_in_elementor_data($value, $object_id, $meta_key, $single)
         $local_url = get_fix_demo_local_url();
         
         if (is_string($value)) {
-            if (strpos($value, 'demo.bravisthemes.com') !== false) {
+            if (strpos($value, 'demo.bravisthemes.com') !== false || strpos($value, '192.168.100.130') !== false) {
                 $value = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $value);
+                $value = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $value);
             }
         } elseif (is_array($value)) {
             $value_serialized = serialize($value);
-            if (strpos($value_serialized, 'demo.bravisthemes.com') !== false) {
+            if (strpos($value_serialized, 'demo.bravisthemes.com') !== false || strpos($value_serialized, '192.168.100.130') !== false) {
                 $value = array_map_recursive(function($item) use ($local_url) {
                     if (is_string($item)) {
-                        return str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $item);
+                        $item = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $item);
+                        $item = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $item);
+                        return $item;
                     }
                     return $item;
                 }, $value);
@@ -116,18 +129,21 @@ function fix_demo_urls_in_options($value) {
     }
     
     $value_serialized = is_array($value) ? serialize($value) : (string)$value;
-    if (strpos($value_serialized, 'demo.bravisthemes.com') !== false) {
+    if (strpos($value_serialized, 'demo.bravisthemes.com') !== false || strpos($value_serialized, '192.168.100.130') !== false) {
         $local_url = get_fix_demo_local_url();
         
         if (is_array($value)) {
             $value = array_map_recursive(function($item) use ($local_url) {
                 if (is_string($item)) {
-                    return str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $item);
+                    $item = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $item);
+                    $item = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $item);
+                    return $item;
                 }
                 return $item;
             }, $value);
         } elseif (is_string($value)) {
             $value = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $value);
+            $value = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $value);
         }
     }
     
@@ -152,9 +168,18 @@ if (!function_exists('array_map_recursive')) {
 add_filter('wp_setup_nav_menu_item', 'fix_demo_urls_in_menu_items', 999);
 
 function fix_demo_urls_in_menu_items($menu_item) {
-    if (isset($menu_item->url) && strpos($menu_item->url, 'demo.bravisthemes.com') !== false) {
+    if (isset($menu_item->url)) {
         $local_url = get_fix_demo_local_url();
-        $menu_item->url = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $menu_item->url);
+        
+        // Replace demo URLs
+        if (strpos($menu_item->url, 'demo.bravisthemes.com') !== false) {
+            $menu_item->url = str_replace(['https://demo.bravisthemes.com/mrittik', 'http://demo.bravisthemes.com/mrittik'], $local_url, $menu_item->url);
+        }
+        
+        // Replace local IP URLs
+        if (strpos($menu_item->url, '192.168.100.130') !== false) {
+            $menu_item->url = str_replace(['https://192.168.100.130', 'http://192.168.100.130'], $local_url, $menu_item->url);
+        }
     }
     
     return $menu_item;
@@ -178,7 +203,7 @@ function fix_demo_urls_in_output($buffer) {
         return $buffer;
     }
     
-    if (strpos($buffer, 'demo.bravisthemes.com') !== false) {
+    if (strpos($buffer, 'demo.bravisthemes.com') !== false || strpos($buffer, '192.168.100.130') !== false) {
         // Use current request URL (not cached, as it may change per request)
         $protocol = 'http';
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
@@ -191,12 +216,17 @@ function fix_demo_urls_in_output($buffer) {
         $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
         $local_url = $protocol . '://' . $host;
         
-        // Replace normal URLs
+        // Replace demo URLs (normal and JSON escaped)
         $buffer = str_replace('https://demo.bravisthemes.com/mrittik', $local_url, $buffer);
         $buffer = str_replace('http://demo.bravisthemes.com/mrittik', $local_url, $buffer);
-        // Replace JSON escaped URLs
         $buffer = str_replace('https:\/\/demo.bravisthemes.com\/mrittik', str_replace('/', '\/', $local_url), $buffer);
         $buffer = str_replace('http:\/\/demo.bravisthemes.com\/mrittik', str_replace('/', '\/', $local_url), $buffer);
+        
+        // Replace local IP URLs (normal and JSON escaped)
+        $buffer = str_replace('https://192.168.100.130', $local_url, $buffer);
+        $buffer = str_replace('http://192.168.100.130', $local_url, $buffer);
+        $buffer = str_replace('https:\/\/192.168.100.130', str_replace('/', '\/', $local_url), $buffer);
+        $buffer = str_replace('http:\/\/192.168.100.130', str_replace('/', '\/', $local_url), $buffer);
     }
     
     return $buffer;
