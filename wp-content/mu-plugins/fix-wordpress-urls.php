@@ -57,39 +57,33 @@ function fix_wordpress_dynamic_url($url, $type = 'home') {
     // Build new base URL
     $new_base_url = $protocol . '://' . $host;
     
-    // If URL contains old base, replace it
-    // Use static to prevent recursion when calling get_option
-    static $old_base = null;
-    if ($old_base === null) {
-        // Temporarily remove filter to get original value
-        remove_filter('option_siteurl', 'fix_wordpress_option_url', 1);
-        $old_base = get_option('siteurl');
-        add_filter('option_siteurl', 'fix_wordpress_option_url', 1);
-        
-        if (empty($old_base)) {
-            $old_base = 'http://192.168.100.130';
-        }
-    }
-    
     // Extract path from URL
     $parsed = parse_url($url);
     $path = isset($parsed['path']) ? $parsed['path'] : '';
     $query = isset($parsed['query']) ? '?' . $parsed['query'] : '';
     $fragment = isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '';
     
-    // If URL starts with old base, replace it
-    if (strpos($url, $old_base) === 0) {
-        $new_url = $new_base_url . $path . $query . $fragment;
-        return $new_url;
-    }
-    
     // If URL is relative or already correct, return as is
     // But if it's a full URL with different domain, check if we should replace
     if (isset($parsed['host']) && $parsed['host'] !== $host) {
         // If it's the old local IP, replace with current host
-        if ($parsed['host'] === '192.168.100.130' || $parsed['host'] === parse_url($old_base, PHP_URL_HOST)) {
+        if ($parsed['host'] === '192.168.100.130') {
             return $new_base_url . $path . $query . $fragment;
         }
+        
+        // Also check if URL contains the old IP in the string
+        if (strpos($url, '192.168.100.130') !== false) {
+            $url = str_replace('https://192.168.100.130', $new_base_url, $url);
+            $url = str_replace('http://192.168.100.130', $new_base_url, $url);
+            return $url;
+        }
+    }
+    
+    // If URL contains 192.168.100.130 anywhere, replace it
+    if (strpos($url, '192.168.100.130') !== false) {
+        $url = str_replace('https://192.168.100.130', $new_base_url, $url);
+        $url = str_replace('http://192.168.100.130', $new_base_url, $url);
+        return $url;
     }
     
     return $url;
