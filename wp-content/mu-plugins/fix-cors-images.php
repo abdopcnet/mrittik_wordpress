@@ -38,6 +38,12 @@ if (!function_exists('fix_cors_demo_image_urls')) {
         $content = str_replace('https://demo.bravisthemes.com/mrittik', $local_url, $content);
         $content = str_replace('http://demo.bravisthemes.com/mrittik', $local_url, $content);
         
+        // Also replace local IP URLs with current domain
+        if (strpos($content, '192.168.100.130') !== false) {
+            $content = str_replace('https://192.168.100.130', $local_url, $content);
+            $content = str_replace('http://192.168.100.130', $local_url, $content);
+        }
+        
         return $content;
     }
 }
@@ -47,26 +53,38 @@ if (!function_exists('fix_cors_demo_urls_in_attachments')) {
     add_filter('wp_get_attachment_url', 'fix_cors_demo_urls_in_attachments', 999);
     
     function fix_cors_demo_urls_in_attachments($url) {
-        if (empty($url) || strpos($url, 'demo.bravisthemes.com') === false) {
+        if (empty($url)) {
             return $url;
         }
         
-        // Extract the path after /mrittik/
-        $path = preg_replace('#https?://demo\.bravisthemes\.com/mrittik(/.*)#', '$1', $url);
-        if ($path !== $url) {
-            // Use current request URL
-            $protocol = 'http';
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
-                $protocol = 'https';
-            } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-                $protocol = 'https';
-            } elseif (isset($_SERVER['HTTP_CF_VISITOR']) && strpos($_SERVER['HTTP_CF_VISITOR'], '"scheme":"https"') !== false) {
-                $protocol = 'https';
-            }
-            $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
-            $local_url = $protocol . '://' . $host;
-            return $local_url . $path;
+        // Use current request URL
+        $protocol = 'http';
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+            $protocol = 'https';
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+            $protocol = 'https';
+        } elseif (isset($_SERVER['HTTP_CF_VISITOR']) && strpos($_SERVER['HTTP_CF_VISITOR'], '"scheme":"https"') !== false) {
+            $protocol = 'https';
         }
+        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+        $local_url = $protocol . '://' . $host;
+        
+        // Replace demo URLs
+        if (strpos($url, 'demo.bravisthemes.com') !== false) {
+            $path = preg_replace('#https?://demo\.bravisthemes\.com/mrittik(/.*)#', '$1', $url);
+            if ($path !== $url) {
+                return $local_url . $path;
+            }
+        }
+        
+        // Replace local IP URLs
+        if (strpos($url, '192.168.100.130') !== false) {
+            $path = preg_replace('#https?://192\.168\.100\.130(/.*)#', '$1', $url);
+            if ($path !== $url) {
+                return $local_url . $path;
+            }
+        }
+        
         return $url;
     }
 }
@@ -93,10 +111,20 @@ if (!function_exists('fix_cors_demo_urls_in_srcset')) {
         $local_url = $protocol . '://' . $host;
         
         foreach ($sources as &$source) {
-            if (isset($source['url']) && strpos($source['url'], 'demo.bravisthemes.com') !== false) {
-                $path = preg_replace('#https?://demo\.bravisthemes\.com/mrittik(/.*)#', '$1', $source['url']);
-                if ($path !== $source['url']) {
-                    $source['url'] = $local_url . $path;
+            if (isset($source['url'])) {
+                // Replace demo URLs
+                if (strpos($source['url'], 'demo.bravisthemes.com') !== false) {
+                    $path = preg_replace('#https?://demo\.bravisthemes\.com/mrittik(/.*)#', '$1', $source['url']);
+                    if ($path !== $source['url']) {
+                        $source['url'] = $local_url . $path;
+                    }
+                }
+                // Replace local IP URLs
+                elseif (strpos($source['url'], '192.168.100.130') !== false) {
+                    $path = preg_replace('#https?://192\.168\.100\.130(/.*)#', '$1', $source['url']);
+                    if ($path !== $source['url']) {
+                        $source['url'] = $local_url . $path;
+                    }
                 }
             }
         }
@@ -130,34 +158,44 @@ function fix_cors_demo_urls_in_js() {
     <script type="text/javascript">
     (function() {
         document.addEventListener('DOMContentLoaded', function() {
-            // Replace demo URLs in img src attributes
-            var images = document.querySelectorAll('img[src*="demo.bravisthemes.com"]');
+            var localUrl = '<?php echo esc_js($local_url); ?>';
+            
+            // Replace demo URLs and local IP URLs in img src attributes
+            var images = document.querySelectorAll('img[src*="demo.bravisthemes.com"], img[src*="192.168.100.130"]');
             images.forEach(function(img) {
                 var src = img.getAttribute('src');
                 if (src) {
-                    img.src = src.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, '<?php echo esc_js($local_url); ?>');
+                    src = src.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, localUrl);
+                    src = src.replace(/https?:\/\/192\.168\.100\.130/g, localUrl);
+                    img.src = src;
                 }
             });
             
-            // Replace demo URLs in background images
-            var elements = document.querySelectorAll('[style*="demo.bravisthemes.com"]');
+            // Replace demo URLs and local IP URLs in background images
+            var elements = document.querySelectorAll('[style*="demo.bravisthemes.com"], [style*="192.168.100.130"]');
             elements.forEach(function(el) {
                 var style = el.getAttribute('style');
                 if (style) {
-                    el.style.cssText = style.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, '<?php echo esc_js($local_url); ?>');
+                    style = style.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, localUrl);
+                    style = style.replace(/https?:\/\/192\.168\.100\.130/g, localUrl);
+                    el.style.cssText = style;
                 }
             });
             
             // Also handle data attributes
-            var dataElements = document.querySelectorAll('[data-bg*="demo.bravisthemes.com"], [data-src*="demo.bravisthemes.com"]');
+            var dataElements = document.querySelectorAll('[data-bg*="demo.bravisthemes.com"], [data-src*="demo.bravisthemes.com"], [data-bg*="192.168.100.130"], [data-src*="192.168.100.130"]');
             dataElements.forEach(function(el) {
                 if (el.hasAttribute('data-bg')) {
                     var bg = el.getAttribute('data-bg');
-                    el.setAttribute('data-bg', bg.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, '<?php echo esc_js($local_url); ?>'));
+                    bg = bg.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, localUrl);
+                    bg = bg.replace(/https?:\/\/192\.168\.100\.130/g, localUrl);
+                    el.setAttribute('data-bg', bg);
                 }
                 if (el.hasAttribute('data-src')) {
                     var src = el.getAttribute('data-src');
-                    el.setAttribute('data-src', src.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, '<?php echo esc_js($local_url); ?>'));
+                    src = src.replace(/https?:\/\/demo\.bravisthemes\.com\/mrittik/g, localUrl);
+                    src = src.replace(/https?:\/\/192\.168\.100\.130/g, localUrl);
+                    el.setAttribute('data-src', src);
                 }
             });
         });
@@ -188,9 +226,17 @@ if (!function_exists('fix_cors_demo_urls_in_image_attributes')) {
         $local_url = $protocol . '://' . $host;
         
         foreach ($attr as $key => $value) {
-            if (is_string($value) && strpos($value, 'demo.bravisthemes.com') !== false) {
-                $attr[$key] = str_replace('https://demo.bravisthemes.com/mrittik', $local_url, $value);
-                $attr[$key] = str_replace('http://demo.bravisthemes.com/mrittik', $local_url, $attr[$key]);
+            if (is_string($value)) {
+                // Replace demo URLs
+                if (strpos($value, 'demo.bravisthemes.com') !== false) {
+                    $attr[$key] = str_replace('https://demo.bravisthemes.com/mrittik', $local_url, $value);
+                    $attr[$key] = str_replace('http://demo.bravisthemes.com/mrittik', $local_url, $attr[$key]);
+                }
+                // Replace local IP URLs
+                if (strpos($attr[$key], '192.168.100.130') !== false) {
+                    $attr[$key] = str_replace('https://192.168.100.130', $local_url, $attr[$key]);
+                    $attr[$key] = str_replace('http://192.168.100.130', $local_url, $attr[$key]);
+                }
             }
         }
         return $attr;
