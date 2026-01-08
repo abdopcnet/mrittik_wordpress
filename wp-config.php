@@ -107,20 +107,40 @@ if (isset($_SERVER['HTTP_CF_VISITOR']) && strpos($_SERVER['HTTP_CF_VISITOR'], '"
 
 // Trust Cloudflare IP ranges (optional, for better IP detection)
 // You can add this if you want to trust Cloudflare's IP ranges
-define('WP_PROXY_HOST', '');
-define('WP_PROXY_PORT', '');
+// Don't set empty proxy values as it causes errors
+// define('WP_PROXY_HOST', '');
+// define('WP_PROXY_PORT', '');
 
 // Force HTTPS if using Cloudflare Tunnel with HTTPS
 // Uncomment the line below if your Cloudflare Tunnel URL uses HTTPS
 // $_SERVER['HTTPS'] = 'on';
 
+// Fix SSL verification for WordPress API calls
+// Allow WordPress to connect to WordPress.org API
+define('WP_HTTP_BLOCK_EXTERNAL', false);
+define('FS_METHOD', 'direct');
+
+// Allow WordPress to access WordPress.org APIs
+if (!defined('WP_ACCESSIBLE_HOSTS')) {
+    define('WP_ACCESSIBLE_HOSTS', 'api.wordpress.org,downloads.wordpress.org,*.wordpress.org');
+}
+
 // Set WordPress URLs for Cloudflare Tunnel
-// Update these with your actual domain
+// Comment out these lines if you want to use local HTTP access
+// Or set them dynamically based on the request
 if (!defined('WP_HOME')) {
-    define('WP_HOME', 'https://mrittik.future-support.online');
+    // Only force HTTPS for external domain, allow HTTP for local IP
+    if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'future-support.online') !== false) {
+        define('WP_HOME', 'https://mrittik.future-support.online');
+    }
+    // If local IP, WordPress will auto-detect from request
 }
 if (!defined('WP_SITEURL')) {
-    define('WP_SITEURL', 'https://mrittik.future-support.online');
+    // Only force HTTPS for external domain, allow HTTP for local IP
+    if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'future-support.online') !== false) {
+        define('WP_SITEURL', 'https://mrittik.future-support.online');
+    }
+    // If local IP, WordPress will auto-detect from request
 }
 
 /* That's all, stop editing! Happy publishing. */
