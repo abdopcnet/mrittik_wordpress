@@ -115,14 +115,13 @@ if (isset($_SERVER['HTTP_CF_VISITOR']) && strpos($_SERVER['HTTP_CF_VISITOR'], '"
 // Uncomment the line below if your Cloudflare Tunnel URL uses HTTPS
 // $_SERVER['HTTPS'] = 'on';
 
-// Fix SSL verification for WordPress API calls
-// Allow WordPress to connect to WordPress.org API
-define('WP_HTTP_BLOCK_EXTERNAL', false);
+// Block all external HTTP connections (offline mode)
+define('WP_HTTP_BLOCK_EXTERNAL', true);
 define('FS_METHOD', 'direct');
 
-// Allow WordPress to access WordPress.org APIs
+// Only allow localhost connections (no external hosts)
 if (!defined('WP_ACCESSIBLE_HOSTS')) {
-    define('WP_ACCESSIBLE_HOSTS', 'api.wordpress.org,downloads.wordpress.org,*.wordpress.org');
+    define('WP_ACCESSIBLE_HOSTS', 'localhost,127.0.0.1');
 }
 
 // Set WordPress URLs for Cloudflare Tunnel
